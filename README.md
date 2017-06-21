@@ -1,2 +1,79 @@
 # s3backup
-A backup script using Amazon S3 as a storage
+
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
+[license]: https://github.com/lowply/lacrosse/blob/master/LICENSE
+
+s3backup - A backup script using Amazon S3 as a storage.
+
+## Usage
+
+```bash
+s3backup [ sync | test | clean ]
+```
+
+- `sync` will execute backup
+- `test` will execute dryrun
+- `clean` will remove all backups for the host
+
+## Requirements
+
+- macOS or Linux based platform
+- awscli, jq
+- aws profile granted S3 read/write permission
+
+## Installation
+
+- Clone this repository and copy `s3backup` script to `/usr/local/bin` or somewhere in your `$PATH`.
+
+## Config
+
+Config is in JSON format. Here's an example:
+
+```
+{
+    "enabled": true,
+    "profile": "default",
+    "bucket": "bucket",
+    "dir": "backup",
+    "node": "hostname",
+    "targets": [
+        {
+            "path": "/home",
+            "exclude": [
+                "*.cache",
+                "*.cache/*",
+                "*.cpanm/*",
+                "*.gem/*",
+                "*.github-backup-utils/*",
+                "*.log/*",
+                "*.node-gyp/*",
+                "*.nodenv/*",
+                "*.npm/*",
+                "*.pyenv/*",
+                "*.rbenv/*",
+                "*.terminfo/*",
+                "*node_modules/*",
+                "*vendor/*"
+            ]
+        },
+        {
+            "path": "/etc",
+            "exclude": [
+                "httpd/logs/*"
+            ]
+        }
+    ]
+}
+```
+
+## Logs
+
+Logs will be recorded to the `~/.log/s3backup/YYMMDD.log` file.
+
+## License
+
+MIT
+
+## Author
+
+Sho Mizutani
