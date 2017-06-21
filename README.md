@@ -1,6 +1,7 @@
 # s3backup
 
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
+
 [license]: https://github.com/lowply/lacrosse/blob/master/LICENSE
 
 s3backup - A backup script using Amazon S3 as a storage.
