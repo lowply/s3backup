@@ -13,44 +13,7 @@
 #/ - test:  Dry run
 #/ - clean: Remove all backups
 #/
-#/ Example Config:
-#/ 
-#/ -------------------- 
-#/ {
-#/ 	"enabled": true,
-#/ 	"profile": "default",
-#/ 	"bucket": "bucket",
-#/ 	"dir": "backup",
-#/ 	"node": "hostname",
-#/ 	"targets": [
-#/ 		{
-#/ 			"path": "/home",
-#/ 			"exclude": [
-#/				"*.cache",
-#/				"*.cache/*",
-#/				"*.cpanm/*",
-#/				"*.gem/*",
-#/				"*.github-backup-utils/*",
-#/				"*.log/*",
-#/				"*.node-gyp/*",
-#/				"*.nodenv/*",
-#/				"*.npm/*",
-#/				"*.pyenv/*",
-#/				"*.rbenv/*",
-#/				"*.terminfo/*",
-#/				"*node_modules/*",
-#/				"*vendor/*"
-#/ 			]
-#/ 		},
-#/ 		{
-#/ 			"path": "/etc",
-#/ 			"exclude": [
-#/ 				"httpd/logs/*"
-#/ 			]
-#/ 		}
-#/ 	]
-#/ }
-#/ -------------------- 
+#/ Visit https://github.com/lowply/s3backup to see config example.
 #/ 
 
 CONF="${HOME}/.config/s3backup.json"
