@@ -16,6 +16,8 @@
 #/ Visit https://github.com/lowply/s3backup to see config example.
 #/ 
 
+export PATH=${PATH}:/usr/local/bin
+
 CONF="${HOME}/.config/s3backup.json"
 
 logfile(){
