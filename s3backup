@@ -38,11 +38,11 @@ logger_error(){
 }
 
 has(){
-	type ${1} >/dev/null 2>&1 && return 0 || { echo "Command not found: ${1}"; return 1; }
+	type ${1} >/dev/null 2>&1 && return 0 || { echo "Command not found: ${1}" 1>&2; return 1; }
 }
 
 check_file(){
-	[ -f ${1} ] && return 0 || { echo "No such file: ${1}"; return 1; }
+	[ -f ${1} ] && return 0 || { echo "No such file: ${1}" 1>&2; return 1; }
 }
 
 usage() {
@@ -72,7 +72,7 @@ check_conf(){
 	if [ -f ${1} ]; then
 
 		jq '.' ${1} > /dev/null 2>&1
-		[ $? -ne 0 ] && { echo "Error parsing config: ${1}"; return 1; }
+		[ $? -ne 0 ] && { echo "Error parsing config: ${1}" 1>&2; return 1; }
 
 		check_value ".enabled"
 		check_value ".profile"
@@ -80,7 +80,7 @@ check_conf(){
 		check_value ".dir"
 		check_value ".node"
 
-		[ $? -ne 0 ] && { echo "Wrong config"; return 1; }
+		[ $? -ne 0 ] && { echo "Wrong config" 1>&2; return 1; }
 
 		return 0
 	else
@@ -108,7 +108,7 @@ check_conf(){
 				]
 			}
 		EOL
-		echo "Config ${1} is generated, please update it."
+		echo "Config ${1} is generated, please update it." 1>&2
 		return 1
 	fi
 }
@@ -122,7 +122,7 @@ sync(){
 	local NODE=$(jqr '.node')
 	local BASIC_OPTS="--profile ${PROFILE} --no-follow-symlinks --delete"
 	
-	[ "${ENABLED}" != "true" ] && { echo "Backup is disabled."; return 1; }
+	[ "${ENABLED}" != "true" ] && { echo "Backup is disabled." 1>&2; return 1; }
 
 	for TARGET in ${TARGETS}; do
 		# Not using jqr because I need no-raw output here:
