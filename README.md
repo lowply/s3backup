@@ -24,7 +24,12 @@ s3backup [ sync | test | clean ]
 
 ## Installation
 
-- Clone this repository and copy `s3backup` script to `/usr/local/bin` or somewhere in your `$PATH`.
+Clone this repository and symlink `s3backup` to somewhere in your `$PATH`. For example:
+
+```
+git clone https://github.com/lowply/s3backup.git
+ln -s $(pwd)/s3backup/s3backup /usr/local/bin/
+```
 
 ## Config
 
