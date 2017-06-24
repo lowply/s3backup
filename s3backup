@@ -94,6 +94,9 @@ check_conf(){
 				"bucket": "aws_bucket",
 				"dir": "directory_in_bucket",
 				"node":"your_host_name",
+				"exclude":[
+					"file_or_directory_to_exclude_globally"
+				],
 				"targets": [
 					{
 						"path":"/path/to/directory_A",
@@ -122,9 +125,14 @@ sync(){
 	local BUCKET=$(jqr '.bucket')
 	local BACKUPDIR=$(jqr '.dir')
 	local NODE=$(jqr '.node')
+	local GEXCLUDES=$(jq ".exclude[]" ${CONF})
 	local BASIC_OPTS="--profile ${PROFILE} --no-follow-symlinks --delete"
 	
 	[ "${ENABLED}" != "true" ] && { echo "Backup is disabled." 1>&2; return 1; }
+
+	for GEXCLUDE in ${GEXCLUDES}; do
+		local BASIC_OPTS="${BASIC_OPTS} --exclude ${GEXCLUDE}"
+	done
 
 	for TARGET in ${TARGETS}; do
 		# Not using jqr because I need no-raw output here:

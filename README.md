@@ -37,12 +37,17 @@ Config is in JSON format. Here's an example:
     "bucket": "bucket",
     "dir": "backup",
     "node": "hostname",
+	"exclude":[
+		"*.DS_Store",
+		"*Icon",
+		"*.cache/*",
+		"*node_modules/*",
+		"*vendor/*"
+	],
     "targets": [
         {
             "path": "/home",
             "exclude": [
-                "*.cache",
-                "*.cache/*",
                 "*.cpanm/*",
                 "*.gem/*",
                 "*.github-backup-utils/*",
@@ -53,8 +58,6 @@ Config is in JSON format. Here's an example:
                 "*.pyenv/*",
                 "*.rbenv/*",
                 "*.terminfo/*",
-                "*node_modules/*",
-                "*vendor/*"
             ]
         },
         {
