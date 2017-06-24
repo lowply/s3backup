@@ -37,13 +37,13 @@ Config is in JSON format. Here's an example:
     "bucket": "bucket",
     "dir": "backup",
     "node": "hostname",
-	"exclude":[
-		"*.DS_Store",
-		"*Icon",
-		"*.cache/*",
-		"*node_modules/*",
-		"*vendor/*"
-	],
+    "exclude":[
+        "*.DS_Store",
+        "*Icon",
+        "*.cache/*",
+        "*node_modules/*",
+        "*vendor/*"
+    ],
     "targets": [
         {
             "path": "/home",
