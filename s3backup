@@ -73,7 +73,7 @@ check_value(){
 check_conf(){
 	if [ -f ${1} ]; then
 
-		jq '.' ${1} > /dev/null 2>&1
+		jq '.' ${1} > /dev/null
 		[ $? -ne 0 ] && { echo "Error parsing config: ${1}" 1>&2; return 1; }
 
 		check_value ".enabled"
