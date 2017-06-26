@@ -44,7 +44,7 @@ Config is in JSON format. Here's an example:
     "node": "hostname",
     "exclude":[
         "*.DS_Store",
-        "*Icon",
+        "*Icon*",
         "*.cache/*",
         "*node_modules/*",
         "*vendor/*"
