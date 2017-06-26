@@ -146,6 +146,7 @@ sync(){
 
 		if [ "${1}" == "test" ]; then
 			CMD="aws s3 sync ${OPTS} --dryrun ${TARGET}/ s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/"
+			echo "${CMD}"
 		else
 			logger "Starting backup for ${TARGET}..."
 			logger "aws s3 sync ${OPTS} ${TARGET}/ s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/"
