@@ -127,7 +127,7 @@ sync(){
 	local BACKUPDIR=$(jqr '.dir')
 	local NODE=$(jqr '.node')
 	local GEXCLUDES=$(jq ".exclude[]" ${CONF})
-	local BASIC_OPTS="--profile ${PROFILE} --no-follow-symlinks --delete"
+	local BASIC_OPTS="--profile ${PROFILE} --storage-class STANDARD_IA --no-follow-symlinks --delete"
 	
 	[ "${ENABLED}" != "true" ] && { echo "Backup is disabled." 1>&2; return 1; }
 
