@@ -131,6 +131,8 @@ sync(){
 	
 	[ "${ENABLED}" != "true" ] && { echo "Backup is disabled." 1>&2; return 1; }
 
+	_IFS=${IFS}
+	IFS=$'\n'
 	for GEXCLUDE in ${GEXCLUDES}; do
 		local BASIC_OPTS="${BASIC_OPTS} --exclude ${GEXCLUDE}"
 	done
@@ -145,15 +147,16 @@ sync(){
 		done
 
 		if [ "${1}" == "test" ]; then
-			CMD="aws s3 sync ${OPTS} --dryrun ${TARGET}/ s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/"
+			CMD="aws s3 sync ${OPTS} --dryrun \"${TARGET}/\" \"s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/\""
 			echo "${CMD}"
 		else
 			logger "Starting backup for ${TARGET}..."
 			logger "aws s3 sync ${OPTS} ${TARGET}/ s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/"
-			CMD="aws s3 sync ${OPTS} ${TARGET}/ s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/ | tee -a $(logfile)"
+			CMD="aws s3 sync ${OPTS} \"${TARGET}/\" \"s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/\" | tee -a $(logfile)"
 		fi
 		eval "${CMD}"
 	done
+	IFS=${_IFS}
 
 	return 0
 }
