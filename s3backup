@@ -197,7 +197,10 @@ main(){
 	case ${HANDLER} in
 		"sync")
 			sync
-			[ $? -ne 0 ] && exit 1
+			# oneliner will return 1 in launchctl
+			if [ $? -ne 0 ]; then
+				exit 1
+			fi
 		;;
 		"test")
 			sync test
