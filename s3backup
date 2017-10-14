@@ -43,6 +43,11 @@ has(){
 	type ${1} >/dev/null 2>&1 && return 0 || { echo "Command not found: ${1}" 1>&2; return 1; }
 }
 
+abort(){
+	echo "$(date): $@" 1>&2
+	exit 1
+}
+
 check_file(){
 	[ -f ${1} ] && return 0 || { echo "No such file: ${1}" 1>&2; return 1; }
 }
@@ -119,7 +124,29 @@ check_conf(){
 	fi
 }
 
+check_wifi(){
+	local WIFI_DEV_NAME=$(networksetup -listallhardwareports | grep -w Wi-Fi -A1 | awk '/^Device:/{ print $2 }')
+	local WIFI_ALLOW=$(jqr '.wifi_allow[]')
+
+	[ -z "${WIFI_DEV_NAME}" ] && abort "Wi-Fi device not found!"
+
+	_IFS=${IFS}
+	IFS=$'\n'
+	for NETWORK in ${WIFI_ALLOW}; do
+		networksetup -getairportnetwork ${WIFI_DEV_NAME} | grep -wq ${NETWORK}
+		[ $? -ne 0 ] && abort "This wifi is not allowed: ${NETWORK}"
+	done
+	IFS=${_IFS}
+	echo "Current WiFi: ${NETWORK}"
+}
+
 sync(){
+	case "${OSTYPE}" in
+	darwin*)
+		check_wifi
+		;;
+	esac
+
 	local ENABLED=$(jqr '.enabled')
 	local PROFILE=$(jqr '.profile')
 	local TARGETS=$(jqr '.targets[] | .path')
