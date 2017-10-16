@@ -126,18 +126,18 @@ check_conf(){
 
 check_wifi(){
 	local WIFI_DEV_NAME=$(networksetup -listallhardwareports | grep -w Wi-Fi -A1 | awk '/^Device:/{ print $2 }')
-	local WIFI_ALLOW=$(jqr '.wifi_allow[]')
-
 	[ -z "${WIFI_DEV_NAME}" ] && abort "Wi-Fi device not found!"
+	local CURRENT_WIFI="$(networksetup -getairportnetwork ${WIFI_DEV_NAME} | sed -e 's/Current Wi-Fi Network: //g')"
+	[ -z "${CURRENT_WIFI}" ] && abort "Current Wi-Fi is empty!"
 
-	_IFS=${IFS}
-	IFS=$'\n'
-	for NETWORK in ${WIFI_ALLOW}; do
-		networksetup -getairportnetwork ${WIFI_DEV_NAME} | grep -wq ${NETWORK}
-		[ $? -ne 0 ] && abort "This wifi is not allowed: ${NETWORK}"
-	done
-	IFS=${_IFS}
-	echo "Current WiFi: ${NETWORK}"
+	while read W
+	do
+		[ "${CURRENT_WIFI}" == "${W}" ] && return 0 || :
+	done <<-EOF
+		$(jqr '.wifi_allow[]')
+	EOF
+
+	abort "Current WiFi: ${CURRENT_WIFI} is not allowed."
 }
 
 sync(){
