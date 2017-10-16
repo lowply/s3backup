@@ -95,6 +95,9 @@ check_conf(){
 		[ -d ${HOME}/.config ] || mkdir ${HOME}/.config
 		cat <<- EOL | jq --tab '.' > ${1}
 			{
+				"wifi_allow": [
+					"Wifi Name"
+				],
 				"enabled": true,
 				"profile": "aws_profile",
 				"bucket": "aws_bucket",
@@ -132,8 +135,8 @@ check_wifi(){
 
 	while read W
 	do
-		[ "${CURRENT_WIFI}" == "${W}" ] && return 0 || :
-	done <<-EOF
+		[ "${CURRENT_WIFI}" == "${W}" ] && return 0
+	done <<- EOF
 		$(jqr '.wifi_allow[]')
 	EOF
 
