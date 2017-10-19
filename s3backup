@@ -207,9 +207,10 @@ size(){
 	local PROFILE=$(jqr '.profile')
 	local BUCKET=$(jqr '.bucket')
 	local CLASS="StandardIAStorage"
-	local YESTERDAY=$(date --date 'today -1 day' --iso-8601=seconds | sed -e 's/\+.*$//')
+	local YESTERDAY=$(date --date 'today -14 day' --iso-8601=seconds | sed -e 's/\+.*$//')
 	local TODAY=$(date --date 'today' --iso-8601=seconds | sed -e 's/\+.*$//')
-	local SIZE=$(
+
+	local DATA=$(
 		aws --profile ${PROFILE} cloudwatch \
 			get-metric-statistics \
 			--namespace AWS/S3 \
@@ -221,11 +222,18 @@ size(){
 			--dimensions \
 			Name=BucketName,Value=${BUCKET} \
 			Name=StorageType,Value=${CLASS} \
-			--query 'Datapoints[].Maximum' \
-			--output text
+			--query 'sort_by(Datapoints[].{
+				Time:Timestamp,
+				Value:Maximum
+			},&Time)'
 	)
-	local GB=$(echo ${SIZE} | numfmt --to=iec --suffix=B --padding=7)
-	echo "${TODAY} ${CLASS}:${GB}"
+	echo "Bucket usage for the past 7 days:"
+	for V in $(echo ${DATA} | jq -c .[])
+	do
+		local DT=$(echo ${V} | jq -r .Time)
+		local GB=$(echo ${V} | jq -r .Value | numfmt --to=iec --suffix=B --padding=7)
+		echo "    ${DT}: ${GB}"
+	done
 }
 
 main(){
