@@ -33,9 +33,9 @@ Config is in JSON format. Here's an example:
 
 ```
 {
-	"wifi_allow": [
-		"Wifi SSID"
-	],
+    "wifi_allow": [
+        "Wifi SSID"
+    ],
     "enabled": true,
     "profile": "default",
     "bucket": "bucket",
@@ -43,8 +43,6 @@ Config is in JSON format. Here's an example:
     "node": "hostname",
     "exclude":[
         "*.DS_Store",
-        "*Icon*",
-        "*.cache/*",
         "*node_modules/*",
         "*vendor/*"
     ],
@@ -52,22 +50,12 @@ Config is in JSON format. Here's an example:
         {
             "path": "/home",
             "exclude": [
-                "*.cpanm/*",
-                "*.gem/*",
-                "*.github-backup-utils/*",
-                "*.log/*",
-                "*.node-gyp/*",
-                "*.nodenv/*",
-                "*.npm/*",
-                "*.pyenv/*",
                 "*.rbenv/*",
-                "*.terminfo/*",
             ]
         },
         {
-            "path": "/etc",
+            "path": "/etc/nginx",
             "exclude": [
-                "httpd/logs/*"
             ]
         }
     ]
