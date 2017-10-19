@@ -6,12 +6,13 @@
 #/ Prerequirements: aws-cli, jq
 #/ Author: @lowply
 #/ Config location: ~/.config/s3backup.json
-#/ Log location: ~/.log/s3backup
+#/ Log location:    ~/.log/s3backup
 #/ Subcommands:
 #/ 
-#/ - sync:  Do sync
-#/ - test:  Dry run
+#/ - sync : Do sync
+#/ - test : Dry run
 #/ - clean: Remove all backups
+#/ - size : Total size of the backup
 #/
 #/ Visit https://github.com/lowply/s3backup to see config example.
 #/ 
@@ -96,7 +97,7 @@ check_conf(){
 		cat <<- EOL | jq --tab '.' > ${1}
 			{
 				"wifi_allow": [
-					"Wifi Name"
+					"Wifi SSID"
 				],
 				"enabled": true,
 				"profile": "aws_profile",
@@ -202,6 +203,31 @@ clean(){
 	eval "${CMD}"
 }
 
+size(){
+	local PROFILE=$(jqr '.profile')
+	local BUCKET=$(jqr '.bucket')
+	local CLASS="StandardIAStorage"
+	local YESTERDAY=$(date --date 'today -1 day' --iso-8601=seconds | sed -e 's/\+.*$//')
+	local TODAY=$(date --date 'today' --iso-8601=seconds | sed -e 's/\+.*$//')
+	local SIZE=$(
+		aws --profile ${PROFILE} cloudwatch \
+			get-metric-statistics \
+			--namespace AWS/S3 \
+			--metric-name BucketSizeBytes \
+			--statistics Maximum \
+			--start-time ${YESTERDAY} \
+			--end-time ${TODAY} \
+			--period 86400 \
+			--dimensions \
+			Name=BucketName,Value=${BUCKET} \
+			Name=StorageType,Value=${CLASS} \
+			--query 'Datapoints[].Maximum' \
+			--output text
+	)
+	local GB=$(echo ${SIZE} | numfmt --to=iec --suffix=B --padding=7)
+	echo "${TODAY} ${CLASS}:${GB}"
+}
+
 main(){
 	# check jq command
 	has jq
@@ -237,6 +263,9 @@ main(){
 		;;
 		"clean")
 			clean
+		;;
+		"size")
+			size
 		;;
 		*)
 			usage

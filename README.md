@@ -37,6 +37,9 @@ Config is in JSON format. Here's an example:
 
 ```
 {
+	"wifi_allow": [
+		"Wifi SSID"
+	],
     "enabled": true,
     "profile": "default",
     "bucket": "bucket",
