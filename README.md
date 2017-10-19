@@ -8,13 +8,9 @@ s3backup - A backup script using Amazon S3 as a storage.
 
 ## Usage
 
-```bash
-s3backup [ sync | test | clean ]
 ```
-
-- `sync` will execute backup
-- `test` will execute dryrun
-- `clean` will remove all backups for the host
+s3backup [ sync | test | clean | size ]
+```
 
 ## Requirements
 
