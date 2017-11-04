@@ -131,7 +131,11 @@ check_conf(){
 check_wifi(){
 	local WIFI_DEV_NAME=$(networksetup -listallhardwareports | grep -w Wi-Fi -A1 | awk '/^Device:/{ print $2 }')
 	[ -z "${WIFI_DEV_NAME}" ] && abort "Wi-Fi device not found!"
-	local CURRENT_WIFI="$(networksetup -getairportnetwork ${WIFI_DEV_NAME} | sed -e 's/Current Wi-Fi Network: //g')"
+
+	local AP="$(networksetup -getairportnetwork ${WIFI_DEV_NAME})"
+	[ ! -z "$(echo ${AP} | grep "You are not associated with an AirPort network.")" ] && abort "Wi-Fi is not enabled."
+
+	local CURRENT_WIFI="$(echo ${AP} | sed -e 's/Current Wi-Fi Network: //g')"
 	[ -z "${CURRENT_WIFI}" ] && abort "Current Wi-Fi is empty!"
 
 	while read W
