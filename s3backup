@@ -175,6 +175,7 @@ sync(){
 	for TARGET in ${TARGETS}; do
 		# Not using jqr because I need no-raw output here:
 		local EXCLUDES=$(jq ".targets[] | select(.path == \"${TARGET}\") .exclude[]" ${CONF})
+		local LOGGING=$(jq ".targets[] | select(.path == \"${TARGET}\") .logging" ${CONF})
 		local OPTS=${BASIC_OPTS}
 
 		for EXCLUDE in ${EXCLUDES}; do
@@ -187,7 +188,8 @@ sync(){
 		else
 			logger "Starting backup for ${TARGET}..."
 			logger "aws s3 sync ${OPTS} ${TARGET}/ s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/"
-			CMD="aws s3 sync ${OPTS} \"${TARGET}/\" \"s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/\" | tee -a $(logfile)"
+			CMD="aws s3 sync ${OPTS} \"${TARGET}/\" \"s3://${BUCKET}/${BACKUPDIR}/${NODE}${TARGET}/\""
+			[ "${LOGGING}" == "false" ] || CMD="${CMD} | tee -a $(logfile)"
 		fi
 		eval "${CMD}"
 	done
