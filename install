@@ -1,0 +1,10 @@
+#!/bin/bash
+
+INSTALLDIR="${HOME}/bin"
+
+if [ -d  ]; then
+	ln -sf $(pwd)/s3backup ${INSTALLDIR}/s3backup 
+else
+	echo "${INSTALLDIR} not found"
+	exit 1
+fi
