@@ -212,7 +212,7 @@ clean(){
 size(){
 	local PROFILE=$(jqr '.profile')
 	local BUCKET=$(jqr '.bucket')
-	local CLASS="OnezoneIAStorage"
+	local CLASS="OneZoneIAStorage"
 	local YESTERDAY=$(date --date 'today -14 day' --iso-8601=seconds | sed -e 's/\+.*$//')
 	local TODAY=$(date --date 'today' --iso-8601=seconds | sed -e 's/\+.*$//')
 
